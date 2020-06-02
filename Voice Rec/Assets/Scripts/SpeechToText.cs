@@ -1,14 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using Microsoft.CognitiveServices.Speech;
-#if PLATFORM_ANDROID
-using UnityEngine.Android;
-#endif
-#if PLATFORM_IOS
-using UnityEngine.iOS;
-using System.Collections;
-#endif
-
 
 public class SpeechToText : MonoBehaviour
 {
@@ -20,13 +12,7 @@ public class SpeechToText : MonoBehaviour
     private bool waitingForReco;
     private string message;
 
-    private bool micPermissionGranted = false;
-
-#if PLATFORM_ANDROID || PLATFORM_IOS
-    // Required to manifest microphone permission, cf.
-    // https://docs.unity3d.com/Manual/android-manifest.html
-    private Microphone mic;
-#endif
+    private bool micPermissionGranted = false;    
 
     public async void ButtonClick()
     {
@@ -88,43 +74,14 @@ public class SpeechToText : MonoBehaviour
         else
         {
             // Continue with normal initialization, Text and Button objects are present.
-#if PLATFORM_ANDROID
-            // Request to use the microphone, cf.
-            // https://docs.unity3d.com/Manual/android-RequestingPermissions.html
-            message = "Waiting for mic permission";
-            if (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
-            {
-                Permission.RequestUserPermission(Permission.Microphone);
-            }
-#elif PLATFORM_IOS
-            if (!Application.HasUserAuthorization(UserAuthorization.Microphone))
-            {
-                Application.RequestUserAuthorization(UserAuthorization.Microphone);
-            }
-#else
             micPermissionGranted = true;
             message = "Click button to recognize speech";
-#endif
             startRecoButton.onClick.AddListener(ButtonClick);
         }
     }
 
     void Update()
     {
-#if PLATFORM_ANDROID
-        if (!micPermissionGranted && Permission.HasUserAuthorizedPermission(Permission.Microphone))
-        {
-            micPermissionGranted = true;
-            message = "Click button to recognize speech";
-        }
-#elif PLATFORM_IOS
-        if (!micPermissionGranted && Application.HasUserAuthorization(UserAuthorization.Microphone))
-        {
-            micPermissionGranted = true;
-            message = "Click button to recognize speech";
-        }
-#endif
-
         lock (threadLocker)
         {
             if (startRecoButton != null)
