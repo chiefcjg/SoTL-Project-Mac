@@ -1,16 +1,20 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using Microsoft.CognitiveServices.Speech;
+using System.Linq;
+using System;
 
 public class SpeechToText : MonoBehaviour
 {
     // Hook up the two properties below with a Text and Button object in your UI.
     public Text outputText;
+    public Text outputText2;
     public Button startRecoButton;
 
     private object threadLocker = new object();
     private bool waitingForReco;
     private string message;
+    private string answer = "";
 
     private bool micPermissionGranted = false;    
 
@@ -60,26 +64,29 @@ public class SpeechToText : MonoBehaviour
         }
     }
 
+    //
     void Start()
     {
         if (outputText == null)
         {
-            UnityEngine.Debug.LogError("outputText property is null! Assign a UI Text element to it.");
+            UnityEngine.Debug.LogError("outputText property is null! Assign a UI Text element to it. ");
         }
         else if (startRecoButton == null)
         {
-            message = "startRecoButton property is null! Assign a UI Button to it.";
+            message = "startRecoButton property is null! Assign a UI Button to it. ";
             UnityEngine.Debug.LogError(message);
         }
         else
         {
             // Continue with normal initialization, Text and Button objects are present.
             micPermissionGranted = true;
-            message = "Click button to recognize speech";
+            message = "Click button to recognize speech ";
             startRecoButton.onClick.AddListener(ButtonClick);
         }
     }
 
+
+    //
     void Update()
     {
         lock (threadLocker)
@@ -89,9 +96,22 @@ public class SpeechToText : MonoBehaviour
                 startRecoButton.interactable = !waitingForReco && micPermissionGranted;
             }
             if (outputText != null)
-            {
+            {                
+                checkSumScore();
                 outputText.text = message;
             }
         }
+    }
+
+    public void checkSumScore()
+    {
+        int[] array = new int[5] { 5, 7, 8, 15, 20 };
+
+        int TargetNumber = 21;
+
+        var nearest = array.OrderBy(x => Math.Abs((long)x - TargetNumber)).First();
+
+        answer = nearest.ToString();
+        outputText2.text = answer;
     }
 }
