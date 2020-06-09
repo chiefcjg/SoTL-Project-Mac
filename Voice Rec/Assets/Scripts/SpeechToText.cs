@@ -6,17 +6,20 @@ using System;
 
 public class SpeechToText : MonoBehaviour
 {
-    // Hook up the two properties below with a Text and Button object in your UI.
+    // Hook up the  properties below with a Text and Button object in your UI.
     public Text outputText;
     public Text outputText2;
     public Button startRecoButton;
 
+    //users the following to track if it is recording or not and the message.
     private object threadLocker = new object();
     private bool waitingForReco;
     private string message;
     private string answer = "";
 
-    private bool micPermissionGranted = false;    
+    public bool recordingStarted = false;
+
+    private bool micPermissionGranted = false;
 
     public async void ButtonClick()
     {
@@ -50,6 +53,7 @@ public class SpeechToText : MonoBehaviour
             {
                 newMessage = "NOMATCH: Speech could not be recognized.";
             }
+            //if you stop it it stops. //if there are errors
             else if (result.Reason == ResultReason.Canceled)
             {
                 var cancellation = CancellationDetails.FromResult(result);
@@ -67,10 +71,13 @@ public class SpeechToText : MonoBehaviour
     //
     void Start()
     {
+        //if it is missing its output text
         if (outputText == null)
         {
             UnityEngine.Debug.LogError("outputText property is null! Assign a UI Text element to it. ");
         }
+
+        // if it is missing the UI button
         else if (startRecoButton == null)
         {
             message = "startRecoButton property is null! Assign a UI Button to it. ";
@@ -78,6 +85,7 @@ public class SpeechToText : MonoBehaviour
         }
         else
         {
+            //it work!
             // Continue with normal initialization, Text and Button objects are present.
             micPermissionGranted = true;
             message = "Click button to recognize speech ";
@@ -86,32 +94,40 @@ public class SpeechToText : MonoBehaviour
     }
 
 
-    //
+    //updated every frame.
     void Update()
     {
         lock (threadLocker)
         {
+            //if recording does not equal null it records, gets permission, and sets recording started to true
             if (startRecoButton != null)
             {
                 startRecoButton.interactable = !waitingForReco && micPermissionGranted;
+                recordingStarted = true;
             }
+            //when no more text is being input it stops.
             if (outputText != null)
-            {                
+            {
                 checkSumScore();
                 outputText.text = message;
             }
         }
     }
 
+    //used to check the score/check and compare two answers.
     public void checkSumScore()
     {
-        int[] array = new int[5] { 5, 7, 8, 15, 20 };
+        answer = "Does this work?";
+        //checks the answer against the message.
+        if (message == answer)
+        {
+            outputText2.text = "it worked";
+        }
+        //incase it fails.
+        else
+        {
+            outputText2.text = "failed";
+        }
 
-        int TargetNumber = 21;
-
-        var nearest = array.OrderBy(x => Math.Abs((long)x - TargetNumber)).First();
-
-        answer = nearest.ToString();
-        outputText2.text = answer;
     }
 }
