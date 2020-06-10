@@ -11,7 +11,7 @@ public class SpeechToText : MonoBehaviour
     public Text outputText2;
     public Button startRecoButton;
 
-    //users the following to track if it is recording or not and the message.
+    //uses the following to track if it is recording or not and the message.
     private object threadLocker = new object();
     private bool waitingForReco;
     private string message;

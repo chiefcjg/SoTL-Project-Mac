@@ -10,13 +10,16 @@ public class TextToSpeech : MonoBehaviour
     public Button speakButton;
     public AudioSource audioSource;
 
+    //uses the following to track if it is playing or not and the message.
     private object threadLocker = new object();
     private bool waitingForSpeak;
     private string message;
 
+    //uses the following to play the message and decode it
     private SpeechConfig speechConfig;
     private SpeechSynthesizer synthesizer;
 
+    //tracks to play
     public void ButtonClick()
     {
         lock (threadLocker)
@@ -64,17 +67,21 @@ public class TextToSpeech : MonoBehaviour
         }
     }
 
+    //run at start.
     void Start()
     {
+        //if it is missing its output
         if (outputText == null)
         {
             UnityEngine.Debug.LogError("outputText property is null! Assign a UI Text element to it.");
         }
+        // if it is missing its input text value
         else if (inputField == null)
         {
             message = "inputField property is null! Assign a UI InputField element to it.";
             UnityEngine.Debug.LogError(message);
         }
+        //missing speak button
         else if (speakButton == null)
         {
             message = "speakButton property is null! Assign a UI Button to it.";
@@ -106,18 +113,19 @@ public class TextToSpeech : MonoBehaviour
     {
         lock (threadLocker)
         {
+            //if recording does not equal null it records, gets permission, and sets recording started to true
             if (speakButton != null)
             {
                 speakButton.interactable = !waitingForSpeak;
             }
-
+            //when no more text is being input it stops.
             if (outputText != null)
             {
                 outputText.text = message;
             }
         }
     }
-
+    //deletes the talking voice so it doesnt loop.
     void OnDestroy()
     {
         synthesizer.Dispose();
