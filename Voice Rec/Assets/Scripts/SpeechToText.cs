@@ -25,7 +25,8 @@ public class SpeechToText : MonoBehaviour
 
     private bool micPermissionGranted = false;
     public string[] args;
-    
+
+    private string feedbackAnswer;
 
     public async void ButtonClick()
     {
@@ -90,8 +91,8 @@ public class SpeechToText : MonoBehaviour
 
             //var x = JObject.Parse(strPrediction.Result);
             //var score = x["prediction"]["intents"];
-            outputText.text = strPrediction.Result;
-            
+            feedbackAnswer = strPrediction.Result;
+                        
             Debug.Log(strPrediction.Result);
 
             Debug.Log("Press ENTER to exit...");
@@ -140,6 +141,7 @@ public class SpeechToText : MonoBehaviour
             if (outputText != null)
             {
                 checkSumScore();
+                outputText.text = feedbackAnswer;
             }
         }
     }
