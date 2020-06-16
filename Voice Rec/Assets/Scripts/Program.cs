@@ -64,7 +64,7 @@ namespace csharp_predict_with_rest
 
             var predictionEndpointUri = String.Format("{0}luis/prediction/v3.0/apps/{1}/slots/production/predict?{2}", predictionEndpoint, appId, queryString);
 
-            // Remove these before updating the article.
+            // used to test parameteres if it gets them.
             Console.WriteLine("endpoint: " + predictionEndpoint);
             Console.WriteLine("appId: " + appId);
             Console.WriteLine("queryString: " + queryString);
