@@ -128,6 +128,40 @@ public class SpeechToText : MonoBehaviour
         {
             outputText2.text = "failed";
         }
+    }
 
+    static async Task<string> MakeRequest(string predictionKey, string predictionEndpoint, string appId, string utterance)
+    {
+        var client = new HttpClient();
+        var queryString = HttpUtility.ParseQueryString(string.Empty);
+
+        // The request header contains your subscription key
+        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", predictionKey);
+
+        // The "q" parameter contains the utterance to send to LUIS
+        queryString["query"] = utterance;
+
+        // These optional request parameters are set to their default values
+        queryString["verbose"] = "true";
+        queryString["show-all-intents"] = "false";
+        queryString["staging"] = "false";
+        queryString["timezoneOffset"] = "0";
+
+        var predictionEndpointUri = String.Format("{0}luis/prediction/v3.0/apps/{1}/slots/production/predict?{2}", predictionEndpoint, appId, queryString);
+
+        // Remove these before updating the article.
+        Console.WriteLine("endpoint: " + predictionEndpoint);
+        Console.WriteLine("appId: " + appId);
+        Console.WriteLine("queryString: " + queryString);
+        Console.WriteLine("endpointUri: " + predictionEndpointUri);
+
+        var response = await client.GetAsync(predictionEndpointUri);
+
+        var strResponseContent = await response.Content.ReadAsStringAsync();
+
+        // Display the JSON result from LUIS.
+        // Console.WriteLine(strResponseContent.ToString());
+        // return the JSON
+        return strResponseContent.ToString();
     }
 }
