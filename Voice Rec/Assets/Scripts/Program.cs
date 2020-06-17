@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Web;
 using System.Threading.Tasks;
-//using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace csharp_predict_with_rest
 {
@@ -36,8 +36,8 @@ namespace csharp_predict_with_rest
             //////////
 
 			Task<string> strPrediction = MakeRequest(predictionKey, predictionEndpoint, appId, utterance);
-			//var x = JObject.Parse(strPrediction.Result);
-			//var score = x["prediction"]["intents"];
+			var x = JObject.Parse(strPrediction.Result);
+			var score = x["prediction"]["intents"];
 			
 			Console.WriteLine(strPrediction.Result);
 			
