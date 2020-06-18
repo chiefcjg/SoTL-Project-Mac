@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using Microsoft.CognitiveServices.Speech;
-using System.Linq;
 using System;
 using System.Net.Http;
-using System.Web;
 using System.Threading.Tasks;
+using System.Web;
+//using Newtonsoft.Json.Linq;
 
 public class SpeechToText : MonoBehaviour
 {
@@ -44,9 +44,6 @@ public class SpeechToText : MonoBehaviour
         var predictionEndpoint = "https://westus.api.cognitive.microsoft.com/";
         
         var utterance = "";
-        
-
-        
 
         // Make sure to dispose the recognizer after use!
         using (var recognizer = new SpeechRecognizer(config))
@@ -89,8 +86,10 @@ public class SpeechToText : MonoBehaviour
             utterance = message;
             Task<string> strPrediction = MakeRequest(predictionKey, predictionEndpoint, appId, utterance);
 
-            //var x = JObject.Parse(strPrediction.Result);
-            //var score = x["prediction"]["intents"];
+           //var predictionResult = JObject.Parse(strPrediction.Result);
+           //var topIntent = predictionResult["prediction"]["topIntent"];
+           //var score = predictionResult["prediction"]["intents"][topIntent.ToString()]["score"];
+
             feedbackAnswer = strPrediction.Result;
                         
             Debug.Log(strPrediction.Result);

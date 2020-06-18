@@ -40,6 +40,26 @@ Created:
 06/10/2020
 MacKenzie Ackles
 
+There is a new file/script called SpeechToTextNewest.
+
+This script is the combined efforts of Stephen Graham and MacKenzie Ackles.
+
+comments have been updated in it to provide best knowledge.
+
+This script requires SteamVR to be installed as well as usable. 
+The project has needs some changes inside of unity as well. 
+The provided Link can walk you through the steps.
+https://medium.com/@sarthakghosh/a-complete-guide-to-the-steamvr-2-0-input-system-in-unity-380e3b1b3311
+will also download as a pdf and include in GIT.
+
+The action made is called RecordMic, and the new action set was acalled p3v.
+After being set dont forget to also add the script to the VR Player, as well as
+adding Steam VR_Activate Action Set On Load.
+
+VRPlayer needs to be deleted after you start loading a scene inorder to load.
+
+For any more info and assistance consult the link and saved PDF
+
 Last Updated:
-06/10/2020
+06/18/2020
 MacKenzie Ackles
